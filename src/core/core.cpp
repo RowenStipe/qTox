@@ -31,6 +31,7 @@
 #include "src/persistence/profile.h"
 #include "corefile.h"
 #include "src/video/camerasource.h"
+#include "src/nms/notificationmanager.h"
 
 #include <tox/tox.h>
 #include <tox/toxav.h>
@@ -436,6 +437,7 @@ void Core::onFriendMessage(Tox*/* tox*/, uint32_t friendId, TOX_MESSAGE_TYPE typ
 {
     bool isAction = (type == TOX_MESSAGE_TYPE_ACTION);
     emit static_cast<Core*>(core)->friendMessageReceived(friendId,CString::toString(cMessage, cMessageSize), isAction);
+    emit static_cast<NotificationManager*>(core)->hookFriendMessage(friendId,type,cMessage,cMessageSize);
 }
 
 void Core::onFriendNameChange(Tox*/* tox*/, uint32_t friendId,

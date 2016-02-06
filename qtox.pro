@@ -530,7 +530,8 @@ SOURCES += \
     src/core/toxcall.cpp \
     src/widget/about/aboutuser.cpp \
     src/persistence/db/rawdatabase.cpp \
-    src/persistence/history.cpp
+    src/persistence/history.cpp \
+    src/nms/notificationmanager.cpp
 
 HEADERS += \
     src/audio/audio.h \
@@ -586,4 +587,5 @@ HEADERS += \
     src/core/toxcall.h \
     src/widget/about/aboutuser.h \
     src/persistence/db/rawdatabase.h \
-    src/persistence/history.h
+    src/persistence/history.h \
+    src/nms/notificationmanager.h
