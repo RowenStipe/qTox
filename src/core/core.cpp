@@ -436,8 +436,8 @@ void Core::onFriendMessage(Tox*/* tox*/, uint32_t friendId, TOX_MESSAGE_TYPE typ
                            const uint8_t* cMessage, size_t cMessageSize, void* core)
 {
     bool isAction = (type == TOX_MESSAGE_TYPE_ACTION);
-    emit static_cast<Core*>(core)->friendMessageReceived(friendId,CString::toString(cMessage, cMessageSize), isAction);
     emit static_cast<NotificationManager*>(core)->hookFriendMessage(friendId,type,cMessage,cMessageSize);
+    emit static_cast<Core*>(core)->friendMessageReceived(friendId,CString::toString(cMessage, cMessageSize), isAction);
 }
 
 void Core::onFriendNameChange(Tox*/* tox*/, uint32_t friendId,
@@ -476,6 +476,7 @@ void Core::onUserStatusChanged(Tox*/* tox*/, uint32_t friendId, TOX_USER_STATUS 
             break;
     }
 
+    emit static_cast<NotificationManager*>(core)->hookFriendStatus(friendId, userstatus);
     emit static_cast<Core*>(core)->friendStatusChanged(friendId, status);
 }
 

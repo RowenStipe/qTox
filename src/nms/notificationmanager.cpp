@@ -48,3 +48,27 @@ void NotificationManager::hookFriendMessage(uint32_t friendId, int type, const u
         qDebug() << "NMS: Message: "+CString::toString(cMessage,cMessageSize);
     }
 }
+
+void NotificationManager::hookFriendStatus(uint32_t friendId, TOX_USER_STATUS status)
+{
+    QString Userstatus;
+    switch (status)
+    {
+    case TOX_USER_STATUS_NONE:
+        Userstatus = "Online";
+        break;
+    case TOX_USER_STATUS_AWAY:
+        Userstatus = "Away";
+        break;
+    case TOX_USER_STATUS_BUSY:
+        Userstatus = "Busy";
+        break;
+    }
+
+    QString Username = Nexus::getCore()->getFriendUsername(friendId);
+    if (QApplication::focusWidget() <= 0)
+    {
+        qDebug() << "NMS: Friend ID: "+Username;
+        qDebug() << "NMS: Status Type: "+Userstatus;
+    }
+}
