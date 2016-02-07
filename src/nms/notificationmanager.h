@@ -10,7 +10,7 @@ class NotificationManager
 {
 public:
     void hookFriendMessage(uint32_t friendId, int type, const uint8_t* cMessage, int cMessageSize);
-    void hookFriendStatus(uint32_t friendId, TOX_USER_STATUS status);
+    void hookFriendStatus(uint32_t friendId, Status status);
 };
 
 #endif // NOTIFICATIONMANAGER_H

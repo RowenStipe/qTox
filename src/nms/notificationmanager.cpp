@@ -49,19 +49,22 @@ void NotificationManager::hookFriendMessage(uint32_t friendId, int type, const u
     }
 }
 
-void NotificationManager::hookFriendStatus(uint32_t friendId, TOX_USER_STATUS status)
+void NotificationManager::hookFriendStatus(uint32_t friendId, Status status)
 {
     QString Userstatus;
     switch (status)
     {
-    case TOX_USER_STATUS_NONE:
+    case Status::Online:
         Userstatus = "Online";
         break;
-    case TOX_USER_STATUS_AWAY:
+    case Status::Away:
         Userstatus = "Away";
         break;
-    case TOX_USER_STATUS_BUSY:
+    case Status::Busy:
         Userstatus = "Busy";
+        break;
+    case Status::Offline:
+       Userstatus = "Offline";
         break;
     }
 

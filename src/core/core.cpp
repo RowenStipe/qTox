@@ -476,7 +476,7 @@ void Core::onUserStatusChanged(Tox*/* tox*/, uint32_t friendId, TOX_USER_STATUS 
             break;
     }
 
-    emit static_cast<NotificationManager*>(core)->hookFriendStatus(friendId, userstatus);
+    emit static_cast<NotificationManager*>(core)->hookFriendStatus(friendId, status);
     emit static_cast<Core*>(core)->friendStatusChanged(friendId, status);
 }
 
@@ -484,6 +484,7 @@ void Core::onConnectionStatusChanged(Tox*/* tox*/, uint32_t friendId, TOX_CONNEC
 {
     Status friendStatus = status != TOX_CONNECTION_NONE ? Status::Online : Status::Offline;
     emit static_cast<Core*>(core)->friendStatusChanged(friendId, friendStatus);
+    emit static_cast<NotificationManager*>(core)->hookFriendStatus(friendId, friendStatus);
     if (friendStatus == Status::Offline)
         static_cast<Core*>(core)->checkLastOnline(friendId);
     CoreFile::onConnectionStatusChanged(static_cast<Core*>(core), friendId, friendStatus != Status::Offline);
