@@ -39,13 +39,21 @@ QString msgType(int msgType)
 
 void NotificationManager::hookFriendMessage(uint32_t friendId, int type, const uint8_t* cMessage, int cMessageSize)
 {
-    sleep(2);
     QString Username = Nexus::getCore()->getFriendUsername(friendId);
     if (QApplication::focusWidget() <= 0)
     {
-        qDebug() << "NMS: Friend ID: "+Username;
-        qDebug() << "NMS: Message Type: "+msgType(type);
-        qDebug() << "NMS: Message: "+CString::toString(cMessage,cMessageSize);
+        if (cMessageSize <= 90)
+        {
+            qDebug() << "NMS: Friend ID: "+Username;
+            qDebug() << "NMS: Message Type: "+msgType(type);
+            qDebug() << "NMS: Message: "+CString::toString(cMessage,cMessageSize);
+        }
+        if (cMessageSize >= 91)
+        {
+            qDebug() << "NMS: Friend ID: "+Username;
+            qDebug() << "NMS: Message Type: "+msgType(type);
+            qDebug() << "NMS: Message: "+CString::toString(cMessage,86)+"...";
+        }
     }
 }
 
@@ -75,3 +83,5 @@ void NotificationManager::hookFriendStatus(uint32_t friendId, Status status)
         qDebug() << "NMS: Status Type: "+Userstatus;
     }
 }
+
+//void NotificationManager::hookFileRecieved(uint32_t friendId, )

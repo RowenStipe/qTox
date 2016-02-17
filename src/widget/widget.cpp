@@ -42,6 +42,7 @@
 #include "src/platform/timer.h"
 #include "systemtrayicon.h"
 #include "src/nexus.h"
+#include "src/nms/notificationmanager.h"
 #include "src/persistence/profile.h"
 #include "src/widget/gui.h"
 #include "src/persistence/offlinemsgengine.h"
@@ -948,8 +949,10 @@ void Widget::onFriendStatusChanged(int friendId, Status status)
     {
         if (f->getStatus() == Status::Offline)
             contactListWidget->moveWidget(f->getFriendWidget(), Status::Online);
-        else if (status == Status::Offline)
+        else if (status == Status::Offline){
             contactListWidget->moveWidget(f->getFriendWidget(), Status::Offline);
+            NotificationManager::hookFriendStatus(friendId, Status::Offline);
+        }
     }
 
     f->setStatus(status);
