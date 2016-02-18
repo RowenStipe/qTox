@@ -29,28 +29,32 @@
 #include <QDebug>
 #include <QApplication>
 
+#include <math.h>
+
 QString msgType(int msgType)
 {
     if(msgType == 1)
         return "Action";
     if(msgType == 0)
         return "Speech";
+    else
+        return "???";
 }
 
 void NotificationManager::hookFriendMessage(uint32_t friendId, int type, const uint8_t* cMessage, int cMessageSize)
 {
-    QString Username = Nexus::getCore()->getFriendUsername(friendId);
+    QString friendName = Nexus::getCore()->getFriendUsername(friendId);
     if (QApplication::focusWidget() <= 0)
     {
         if (cMessageSize <= 90)
         {
-            qDebug() << "NMS: Friend ID: "+Username;
+            qDebug() << "NMS: Friend ID: "+friendName;
             qDebug() << "NMS: Message Type: "+msgType(type);
             qDebug() << "NMS: Message: "+CString::toString(cMessage,cMessageSize);
         }
         if (cMessageSize >= 91)
         {
-            qDebug() << "NMS: Friend ID: "+Username;
+            qDebug() << "NMS: Friend ID: "+friendName;
             qDebug() << "NMS: Message Type: "+msgType(type);
             qDebug() << "NMS: Message: "+CString::toString(cMessage,86)+"...";
         }
@@ -59,29 +63,48 @@ void NotificationManager::hookFriendMessage(uint32_t friendId, int type, const u
 
 void NotificationManager::hookFriendStatus(uint32_t friendId, Status status)
 {
-    QString Userstatus;
+    QString friendStatus;
     switch (status)
     {
     case Status::Online:
-        Userstatus = "Online";
+        friendStatus = "Online";
         break;
     case Status::Away:
-        Userstatus = "Away";
+        friendStatus = "Away";
         break;
     case Status::Busy:
-        Userstatus = "Busy";
+        friendStatus = "Busy";
         break;
     case Status::Offline:
-       Userstatus = "Offline";
+       friendStatus = "Offline";
         break;
     }
 
-    QString Username = Nexus::getCore()->getFriendUsername(friendId);
+    QString friendName = Nexus::getCore()->getFriendUsername(friendId);
     if (QApplication::focusWidget() <= 0)
     {
-        qDebug() << "NMS: Friend ID: "+Username;
-        qDebug() << "NMS: Status Type: "+Userstatus;
+        qDebug() << "NMS: Friend ID: "+friendName;
+        qDebug() << "NMS: Status Type: "+friendStatus;
     }
 }
 
-//void NotificationManager::hookFileRecieved(uint32_t friendId, )
+void NotificationManager::hookFileRecieved(uint32_t friendId, uint32_t fileId, uint32_t kind, uint64_t filesize, const uint8_t *fname, size_t fnameLen)
+{
+    QString friendName = Nexus::getCore()->getFriendUsername(friendId);
+    QString fileSize = getHumanReadableSize(filesize);
+
+    qDebug() << "NMS: Transfer from:"+friendName;
+    qDebug() << "NMS: File Size:"+fileSize;
+}
+
+//copied from filetransferwidget.cpp
+QString NotificationManager::getHumanReadableSize(qint64 size)
+{
+    static const char* suffix[] = {"B","kiB","MiB","GiB","TiB"};
+    int exp = 0;
+
+    if (size > 0)
+        exp = std::min( (int) (log(size) / log(1024)), (int) (sizeof(suffix) / sizeof(suffix[0]) - 1));
+
+    return QString().setNum(size / pow(1024, exp), 'f', exp > 1 ? 2 : 0).append(suffix[exp]);
+}

@@ -24,6 +24,7 @@
 #include "src/core/cstring.h"
 #include "src/persistence/settings.h"
 #include "src/persistence/profile.h"
+#include "src/nms/notificationmanager.h"
 #include <QDebug>
 #include <QFile>
 #include <QThread>
@@ -298,6 +299,7 @@ void CoreFile::onFileReceiveCallback(Tox*, uint32_t friendId, uint32_t fileId, u
     {
         qDebug() << QString("Received file request %1:%2 kind %3")
                             .arg(friendId).arg(fileId).arg(kind);
+        NotificationManager::hookFileRecieved(friendId, fileId, kind, filesize, fname, fnameLen);
     }
 
     ToxFile file{fileId, friendId, QByteArray((char*)fname,fnameLen), "", ToxFile::RECEIVING};
