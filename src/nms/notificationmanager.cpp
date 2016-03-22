@@ -31,7 +31,7 @@
 
 #include <math.h>
 
-QString msgType(int msgType)
+QString msgType(int msgType) // Basic Message type decider
 {
     if(msgType == 1)
         return "Action";
@@ -40,12 +40,11 @@ QString msgType(int msgType)
     else
         return "???";
 }
-
 void NotificationManager::hookFriendMessage(uint32_t friendId, int type, const uint8_t* cMessage, int cMessageSize)
 {
-    QString friendName = Nexus::getCore()->getFriendUsername(friendId);
-    if (QApplication::focusWidget() <= 0)
+    if (QApplication::focusWidget() <= 0) // If any part of the qTox window is active don't display notice message
     {
+        QString friendName = Nexus::getCore()->getFriendUsername(friendId);
         if (cMessageSize <= 90)
         {
             qDebug() << "NMS: Friend ID: "+friendName;
@@ -63,26 +62,26 @@ void NotificationManager::hookFriendMessage(uint32_t friendId, int type, const u
 
 void NotificationManager::hookFriendStatus(uint32_t friendId, Status status)
 {
-    QString friendStatus;
-    switch (status)
-    {
-    case Status::Online:
-        friendStatus = "Online";
-        break;
-    case Status::Away:
-        friendStatus = "Away";
-        break;
-    case Status::Busy:
-        friendStatus = "Busy";
-        break;
-    case Status::Offline:
-       friendStatus = "Offline";
-        break;
-    }
-
-    QString friendName = Nexus::getCore()->getFriendUsername(friendId);
     if (QApplication::focusWidget() <= 0)
     {
+        QString friendStatus;
+        switch (status)
+        {
+        case Status::Online:
+            friendStatus = "Online";
+            break;
+        case Status::Away:
+            friendStatus = "Away";
+            break;
+        case Status::Busy:
+            friendStatus = "Busy";
+            break;
+        case Status::Offline:
+            friendStatus = "Offline";
+            break;
+        }
+
+        QString friendName = Nexus::getCore()->getFriendUsername(friendId);
         qDebug() << "NMS: Friend ID: "+friendName;
         qDebug() << "NMS: Status Type: "+friendStatus;
     }
@@ -90,17 +89,28 @@ void NotificationManager::hookFriendStatus(uint32_t friendId, Status status)
 
 void NotificationManager::hookFileRecieved(uint32_t friendId, uint32_t fileId, uint32_t kind, uint64_t filesize, const uint8_t *fname, size_t fnameLen)
 {
-    QString friendName = Nexus::getCore()->getFriendUsername(friendId);
-    QString fileSize = getHumanReadableSize(filesize);
+    if (QApplication::focusWidget() <= 0)
+    {
+        ToxFile file{fileId, friendId, QByteArray((char*)fname,fnameLen), "", ToxFile::RECEIVING};
+        file.filesize = filesize;
+        file.fileKind = kind;
+        file.resumeFileId.resize(TOX_FILE_ID_LENGTH);
 
-    qDebug() << "NMS: Transfer from:"+friendName;
-    qDebug() << "NMS: File Size:"+fileSize;
+
+        QString friendName = Nexus::getCore()->getFriendUsername(friendId);
+        QString fileSize = getHumanReadableSize(filesize);
+        QString fileName = file.fileName;
+
+        qDebug() << "NMS: Transfer from: "+friendName;
+        qDebug() << "NMS: File Name: "+fileName;
+        qDebug() << "NMS: File Size: "+fileSize;
+    }
 }
 
 //copied from filetransferwidget.cpp
 QString NotificationManager::getHumanReadableSize(qint64 size)
 {
-    static const char* suffix[] = {"B","kiB","MiB","GiB","TiB"};
+    static const char* suffix[] = {" B"," KB"," MB"," GB"," TB"};
     int exp = 0;
 
     if (size > 0)
