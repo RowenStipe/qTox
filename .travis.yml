@@ -16,10 +16,10 @@ deploy:
   on:
     condition: $TRAVIS_OS_NAME == osx
     repo: RowenStipe/qTox
-    branch: Feat-Travis-OSX-Builds
+    branch: OSX-Travis-Build
     tags: true
   skip_cleanup: true
   provider: releases
-  api_key: 7aa5878f34d3b69b6e26cf0a5f05f073fe44bf61
+  api_key: 97ca2da281275139a62583ccf02c0c3259c8d23b
 
-  file: "./osx/qTox.dmg"
+  file: "./qTox.dmg"
