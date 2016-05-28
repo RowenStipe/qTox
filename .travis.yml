@@ -1,14 +1,25 @@
 sudo: required
 dist: trusty
-
 language: cpp
-
 os:
- - linux
- - osx
-
+- linux
+- osx
 script:
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then bash ./verify-commit-messages.sh "$TRAVIS_COMMIT_RANGE" ; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then bash ./verify-commit-messages.sh "$TRAVIS_COMMIT_RANGE"; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then bash ./.travis/build-ubuntu_14_04.sh; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash ./osx/qTox-Mac-Deployer-ULTIMATE.sh -i ; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash ./osx/qTox-Mac-Deployer-ULTIMATE.sh -b ; fi
+before_deploy: 
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash ./osx/qTox-Mac-Deployer-ULTIMATE.sh -d ; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash ./osx/qTox-Mac-Deployer-ULTIMATE.sh -dmg ; fi
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key:
+    secure: YBt7LaLCSRCx8ln3ETsbNfFa7o1Oe897zkK9E7cLcp4/P9OCv3+14lEE6yHw/6CNv2YVKufYBjxj/hjEuiRQKeYfUa2ACFModc47OmEEQFewEspteniFvx7FQ2I+WTOvX5EIfXrG8Jg+K66IgEdDBCklPyjjBWs4kV+ajXD0jqRE99NcsvMUTyJ2mBXdsPEnwfZmG2F5ETlPMf8CikjRUfRWN0qp+VkXyPiuuNyWGu1Z5ne3KRRtGnTcL9fmR71P0RW0qdkceqXJQc1ONiXVhYWAoXkIHF3s7BUkEi82zyCw7EFOp02HiMQqOrtOlggoeO26wImU2IwUGLpvVaiM7c2kk7988V+4ywWUluM2zovd9LacgLC8u1Idj8iJLq9jX6uS35iwPQJs96KQsfR8vOfgcn3hHctBWRl5WiRNCzM+KP3LDJdoquiUl2axehw4YqUL9f4PM7JNJ6+vC3TArKCqmKFP7vLM1O5RPC1esBmcUYTIg93L/YpMtVnE19s5oM9zc8N1bjNBrFRolTs/cWs3QkC8/Jb6siVosmRshWCYUViZfb3reqfmQZY+RGugl1a/XJ8zFfG9gRlsZpmjDzG9l3ozqwoOkUrnjnh54FcTvgxwq81j62HrRyjDhoMAFnEdZvbOCUplDViWlAmfweIFWYyYvvPf8mrbUZMQDS0=
+  file: "./osx/qTox.dmg"
+  on:
+	condition: $TRAVIS_OS_NAME = osx
+    repo: RowenStipe/qTox
+    branch: Feat-Travis-OSX-Builds
+	tags: true
