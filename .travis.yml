@@ -9,17 +9,17 @@ script:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then bash ./.travis/build-ubuntu_14_04.sh; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash ./osx/qTox-Mac-Deployer-ULTIMATE.sh -i ; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash ./osx/qTox-Mac-Deployer-ULTIMATE.sh -b ; fi
-before_deploy: 
+before_deploy:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash ./osx/qTox-Mac-Deployer-ULTIMATE.sh -d ; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash ./osx/qTox-Mac-Deployer-ULTIMATE.sh -dmg ; fi
 deploy:
+  provider: releases
+  api_key:
+    secure: Ji05dTgtKeOirakH6Y4N79Zm6eAeD3rAv0xNqis/mljSi6PxsVn2CqVJyqpHhy4yw6vutjFgxEBbLsaNFv6TcPli3lj1HsrUssYGsKPz0VTl4kxRPCiP+NjsBiuU4/tzb8kSyDkIA/spPwwmEWCEID8BtIDESIcQWMpInfqfMh/yxcK31e2X5AxWbWb90D9smS5B+Yee16KiDCzmc81vHO6k6TpSFxQifrUp5iS6xCLNxqGs6LUv6zBHVLmc2FxT4uNqXQewfV0fg7oW0ghTFo/k8CzfzPx0PHFzZcdmwDFXOX06cbCe1SAnvJnvrBFSnF2qrDMmATMZjGQlDEvWrWhEOZwYV4ntFcvnVTpuI+S+Q6QjREeJkwos2lAJ4bCPJOg+p+aEE0plek4X9JpJ3FRBW8bREwSVfhW+4wrm/uzd+nnLvO5QifZMpPBD9ptuQEJ1UeOQtAjjelnz0em3CpRZghPNsnq8fJBItmfcS6jDj/D1UHvwoHzewUj+L5ZI0wr7jZgkE27DfFVavDHiEir1EJyljY6CFC5pLdncx03lGba81VhBKfpGrpi0GEEmjJZaEiWO1MHoZAYl3dDeWl52Hj01GtTVcCJ/h1GKo12GqM89+cjPpetDaBkcQBLg6n60hc0S9wAsfdXdqgOrezkeznWtnE2uScc+mQYqC5I=
+  file: "./qTox.dmg"
   on:
     condition: $TRAVIS_OS_NAME == osx
     repo: RowenStipe/qTox
     branch: OSX-Travis-Build
     tags: true
   skip_cleanup: true
-  provider: releases
-  api_key: 97ca2da281275139a62583ccf02c0c3259c8d23b
-
-  file: "./qTox.dmg"
